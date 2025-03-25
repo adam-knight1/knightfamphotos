@@ -1,27 +1,43 @@
 package com.fam.knightfam.controller;
 
 import com.fam.knightfam.entity.User;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.fam.knightfam.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
-    @GetMapping("/me")
-    public User getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getClaim("sub");
-        String email = jwt.getClaim("email");
-        String name = jwt.getClaim("name");
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final UserService userService;
 
-        return new User(userId, email, name);
+    // Constructor injection (no need for @Autowired when there's only one constructor)
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/claims")
-    public Map<String, Object> getClaims(@AuthenticationPrincipal Jwt jwt) {
-        return jwt.getClaims();
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        log.info("Creating user with email: {} and name: {}", user.getEmail(), user.getName());
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
     }
+
+    /*@GetMapping("/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable UUID userId) {
+        try {
+            UserDto userDto = userService.getUserData(userId);
+            return ResponseEntity.ok(userDto);
+        } catch (Exception e) {
+            log.error("Failed to fetch user data for userId: {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching user data");
+        }
+    }*/
 }
