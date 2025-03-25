@@ -1,0 +1,31 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: ${COGNITO_CLIENT_ID}
+            client-secret: ${COGNITO_CLIENT_SECRET}
+            scope:
+              - openid
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          cognito:
+            issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+cognito:
+  domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
+  logout-redirect-url: "https://google.com"
