@@ -1,7 +1,5 @@
 package com.fam.knightfam.service;
 
-
-
 import com.fam.knightfam.entity.User;
 import com.fam.knightfam.repository.UserRepository;
 import org.slf4j.Logger;

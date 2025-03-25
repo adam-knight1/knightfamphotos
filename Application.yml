@@ -32,4 +32,5 @@ cognito:
 
 aws:
   s3:
+    bucket: knightfam-s3
     region: us-east-2
