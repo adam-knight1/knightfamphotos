@@ -42,7 +42,7 @@ public class UserService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email: " + email));
     }
-}
+
 
 /*
     public UserDto getUserData(UUID userId) {
@@ -52,8 +52,10 @@ public class UserService {
         return new UserDto(user.getUserId(), user.getName(), user.getEmail(), user.getProfilePictureUrl());
     }
 
+ */
+
     public void updateUser(User user) {
         userRepository.save(user);
     }
 }
-*/
+

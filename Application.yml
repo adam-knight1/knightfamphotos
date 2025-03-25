@@ -29,3 +29,7 @@ logging:
 cognito:
   domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
   logout-redirect-url: "https://google.com"
+
+aws:
+  s3:
+    region: us-east-2
