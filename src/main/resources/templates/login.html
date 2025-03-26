@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Login</title></head>
+<body>
+<h1>Sign In</h1>
+<a th:href="@{/oauth2/authorization/cognito}">Login with Cognito</a>
+<div th:if="${param.error}">
+    <p style="color:red">Login failed. Please try again.</p>
+</div>
+</body>
+</html>
