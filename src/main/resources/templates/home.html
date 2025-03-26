@@ -1,8 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Knightfam Home</title></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Knightfam Home</title>
+</head>
 <body>
-<h1>Welcome to Knightfam!</h1>
-<a th:href="@{/oauth2/authorization/cognito}">Login with Cognito</a>
+<div sec:authorize="isAnonymous()">
+    <h1>Please log in</h1>
+    <a th:href="@{/oauth2/authorization/cognito}"><button>Login with Cognito</button></a>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <h1>Welcome, <span th:text="${#authentication.principal.claims['email']}">User</span>!</h1>
+    <p>You’re now signed in.</p>
+    <a th:href="@{/logout}"><button>Log out</button></a>
+</div>
 </body>
 </html>
