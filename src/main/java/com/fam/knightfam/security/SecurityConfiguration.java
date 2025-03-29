@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
+
+/*Security Configuration class for spring security, it allows or restricts access to various endpoints. */
+/*THere is also a bcrypt password encoder, which may or may not be necessary in production, but does serve to pass tests at the moment*/
 @Configuration
 public class SecurityConfiguration {
 

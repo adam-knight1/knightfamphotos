@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+/*S3 config class that defines S3 builder to allow uploads to S3 ex. photos with metadata uploaded to RDS Postgres */
+
 @Configuration
 public class AwsS3Config {
 

@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/*Photo service contains business logic for photo actions such as uploading, deleting photos.  Interacts with Photo Controller and repo
+* Photos are uploaded to S3 bucket, while metadata is uploaded to RDS and references the corresponding bucket*/
 @RestController
 @RequestMapping("/api/photos")
 public class PhotoController {

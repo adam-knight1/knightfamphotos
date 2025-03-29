@@ -11,8 +11,8 @@
 </div>
 
 <div sec:authorize="isAuthenticated()">
-    <h1>Welcome, <span th:text="${#authentication.principal.claims['email']}">User</span>!</h1>
-    <p>You’re now signed in.</p>
+    <h1>Welcome, <span th:text="${#authentication.principal.claims['email']}">User</span> to Knightfam!</h1>
+    <p>You’re now signed in, nice job!</p>dr
     <a th:href="@{/logout}"><button>Log out</button></a>
 </div>
 </body>
