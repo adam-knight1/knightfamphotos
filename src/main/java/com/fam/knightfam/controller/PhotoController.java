@@ -35,12 +35,12 @@ public class PhotoController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPhoto(@RequestParam("file") MultipartFile file,
                                          @AuthenticationPrincipal Jwt jwt) {
-        // Extract email from the JWT claims
+        // Extracting email from the JWT claims
         String email = jwt.getClaimAsString("email");
         log.info("Received file: {}", file.getOriginalFilename());
         log.info("Authenticated user email: {}", email);
 
-        if (file == null || file.isEmpty()) {
+        if (file.isEmpty()) {  //removed file==null
             log.error("File must not be empty.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File must not be empty.");
         }

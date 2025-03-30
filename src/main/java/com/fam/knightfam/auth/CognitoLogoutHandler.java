@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
-    private final String domain;         // e.g., "https://your-cognito-domain.auth.region.amazoncognito.com"
+    private final String domain;         // example "https://mydomain.auth.region.amazoncognito.com", will update
     private final String clientId;       // Cognito App Client ID
     private final String logoutRedirectUrl;  // Where to redirect after logout
 

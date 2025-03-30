@@ -58,6 +58,7 @@ public class PhotoService {
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         String photoUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, s3Key);
+        //This is how the postgres photo metadata is able to point to the individual photos in the S3 bucket.
 
         User user = userService.findUserByEmail(email);
         if (user == null) {
@@ -76,6 +77,8 @@ public class PhotoService {
 
         return photoUrl;
     }
+
+    //method to upload profile pictures from the user page after a user has logged in.  This will populate when the user logs in
 
     public String uploadProfilePicture(MultipartFile file, String email) throws IOException {
         log.info("Starting uploadProfilePicture method");
@@ -113,7 +116,8 @@ public class PhotoService {
         } catch (DataAccessException e) {
             log.error("Database access error", e);
             throw new IOException("Error updating user information", e);
-        } catch (Exception e) {
+        } catch (Exception e) { //hierarchical exception throwing???
+            //There is no reason to throw the exceptions this way -AK 3/29
             log.error("Unexpected error", e);
             throw e;
         }
