@@ -1,33 +1,24 @@
 package com.fam.knightfam.security;
 
 import com.fam.knightfam.auth.CognitoLogoutHandler;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
-
-/*Security Configuration class for spring security, it allows or restricts access to various endpoints. */
-/*THere is also a bcrypt password encoder, which may or may not be necessary in production, but does serve to pass tests at the moment*/
 @Configuration
 public class SecurityConfiguration {
 
-    @Value("${spring.security.oauth2.client.registration.cognito.client-id}")
-    private String clientId;
-
-    @Value("${cognito.domain}")
-    private String cognitoDomain;
-
-    @Value("${cognito.logout-redirect-url}")
-    private String logoutRedirectUrl;
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, Environment env) throws Exception {
+        String clientId = env.getProperty("spring.security.oauth2.client.registration.cognito.client-id", "placeholder");
+        String cognitoDomain = env.getProperty("cognito.domain", "https://example.auth.us-east-2.amazoncognito.com");
+        String logoutRedirectUrl = env.getProperty("cognito.logout-redirect-url", "http://localhost:8080/");
+
         CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain, clientId, logoutRedirectUrl);
 
         http
@@ -45,8 +36,10 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
     @Bean
-    public PasswordEncoder passwordEncoder() { //added to pass initial tests, may not need
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
+

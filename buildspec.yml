@@ -4,15 +4,17 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your_account_id>.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 913524908137.dkr.ecr.us-east-2.amazonaws.com
   build:
     commands:
       - echo Building the Docker image...
+      - ./gradlew build -x test
       - docker build -t backend-app .
-      - docker tag backend-app:latest <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend-app:latest
+      - docker tag backend-app:latest 913524908137.dkr.ecr.us-east-2.amazonaws.com/backend-app:latest
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/backend-app:latest
+      - docker push 913524908137.dkr.ecr.us-east-2.amazonaws.com/backend-app:latest
+
 artifacts:
-  files: none
+  files: []

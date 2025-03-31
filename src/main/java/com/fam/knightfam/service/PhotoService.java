@@ -1,11 +1,13 @@
 package com.fam.knightfam.service;
 
+import com.fam.knightfam.config.S3Properties;
 import com.fam.knightfam.entity.Photo;
 import com.fam.knightfam.entity.User;
 import com.fam.knightfam.repository.PhotoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -30,21 +32,24 @@ public class PhotoService {
     private final String bucketName;
     private final String region;
 
-    public PhotoService(
-            @Value("${aws.s3.bucket}") String bucketName,
-            @Value("${aws.s3.region}") String region,
-            PhotoRepository photoRepository,
-            UserService userService) {
-        this.bucketName = bucketName;
-        this.region = region;
+    public PhotoService(Environment env,
+                        PhotoRepository photoRepository,
+                        UserService userService) {
+
+        this.bucketName = env.getProperty("aws.s3.bucket", "placeholder-bucket");
+        this.region = env.getProperty("aws.s3.region", "us-east-2");
+
+        if (region == null || region.isBlank()) {
+            throw new IllegalArgumentException("AWS S3 region cannot be null or blank");
+        }
+
         this.photoRepository = photoRepository;
         this.userService = userService;
         this.s3Client = S3Client.builder()
-                .region(Region.of(region))
+                .region(Region.of(this.region))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
-
     public String uploadPhoto(MultipartFile file, String email) throws IOException {
         log.info("Reached service");
         String s3Key = generateUniqueKey(file.getOriginalFilename(), email);
