@@ -1,15 +1,11 @@
-# Use a minimal Java 17 image
-FROM eclipse-temurin:17-jdk-alpine
+# RUN ls -R for debugging when needed
 
-# Set working directory
+FROM eclipse-temurin:17-jdk
+
 WORKDIR /app
 
-# Copy the built jar file into the container
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+COPY build/libs/knightfam-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the default Spring Boot port
 EXPOSE 8080
 
-# Run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,5 +1,13 @@
+# build and IDE artifacts
 .gradle
-build
+
+target
 out
+*.iml
+
+# git and metadata etc
 .git
-*.md
+.gitignore
+
+# OS junk
+.DS_Store

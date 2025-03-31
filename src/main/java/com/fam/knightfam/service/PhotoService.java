@@ -58,7 +58,7 @@ public class PhotoService {
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         String photoUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, s3Key);
-        //This is how the postgres photo metadata is able to point to the individual photos in the S3 bucket.
+        //This is how the postgres photo metadata is able to point to the individual photos in the S3 bucket, using S3 Object URL
 
         User user = userService.findUserByEmail(email);
         if (user == null) {
