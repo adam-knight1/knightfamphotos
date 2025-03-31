@@ -5,12 +5,12 @@ files:
     destination: /home/ec2-user/knightfam
 
 hooks:
-  AfterInstall:
+  BeforeInstall:
     - location: scripts/stop_container.sh
       timeout: 60
       runas: ec2-user
-  ApplicationStart:
+
+  AfterInstall:
     - location: scripts/start_container.sh
       timeout: 60
       runas: ec2-user
-##This file is for AWS codedeploy, allowing it to interact with the relevant scripts and deploy my ecr containers to ec2 instances.
