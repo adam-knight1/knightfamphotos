@@ -47,6 +47,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
 
+	implementation platform("software.amazon.awssdk:bom:2.25.21")
+	implementation "software.amazon.awssdk:secretsmanager"
+	implementation "software.amazon.awssdk:regions"
+
+
 
 	implementation 'software.amazon.awssdk:s3:2.25.21'
 
