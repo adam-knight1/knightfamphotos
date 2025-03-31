@@ -17,4 +17,6 @@ phases:
       - docker push 913524908137.dkr.ecr.us-east-2.amazonaws.com/backend-app:latest
 
 artifacts:
-  files: []
+  files:
+    - appspec.yml
+    - scripts/**/*
