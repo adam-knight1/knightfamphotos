@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class S3Properties {
     private String bucket;
     private String region;
-
     public String getBucket() {
         return bucket;
     }
