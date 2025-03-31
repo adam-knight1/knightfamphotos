@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/knightfam
+
+hooks:
+  AfterInstall:
+    - location: scripts/stop_container.sh
+      timeout: 60
+      runas: ec2-user
+  ApplicationStart:
+    - location: scripts/start_container.sh
+      timeout: 60
+      runas: ec2-user
