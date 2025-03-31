@@ -41,4 +41,13 @@ public class AwsSecretsConfig {
             throw new RuntimeException("Unable to parse secrets JSON", e);
         }
     }
+    @Bean
+    public String cognitoClientId(Map<String, String> awsSecrets) {
+        return awsSecrets.get("COGNITO_CLIENT_ID");
+    }
+
+    @Bean
+    public String cognitoClientSecret(Map<String, String> awsSecrets) {
+        return awsSecrets.get("COGNITO_CLIENT_SECRET");
+    }
 }

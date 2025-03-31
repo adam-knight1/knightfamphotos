@@ -18,6 +18,10 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,9 +54,12 @@ public class PhotoService {
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
+
+
     public String uploadPhoto(MultipartFile file, String email) throws IOException {
         log.info("Reached service");
         String s3Key = generateUniqueKey(file.getOriginalFilename(), email);
+
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
