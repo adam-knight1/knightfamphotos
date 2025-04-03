@@ -61,25 +61,6 @@ public class SecurityConfiguration {
         this.logoutRedirectUrl = env.getProperty("cognito.logout-redirect-url", "http://localhost:8080/");
     }
 
-   /* @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain, clientId, logoutRedirectUrl);
-
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
-                .oauth2Login(oauth -> oauth
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                )
-                .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
-
-        return http.build();
-    }*/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            String cognitoClientId,
@@ -94,7 +75,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**", "/api/photos").permitAll() //todo fix api permissions
                         .anyRequest().authenticated()
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
