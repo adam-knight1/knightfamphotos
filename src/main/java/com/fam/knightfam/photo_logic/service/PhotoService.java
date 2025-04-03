@@ -1,12 +1,14 @@
-package com.fam.knightfam.service;
+package com.fam.knightfam.photo_logic.service;
 
-import com.fam.knightfam.config.S3Properties;
-import com.fam.knightfam.entity.Photo;
-import com.fam.knightfam.entity.User;
-import com.fam.knightfam.repository.PhotoRepository;
+import com.fam.knightfam.main_logic.entity.User;
+import com.fam.knightfam.main_logic.service.UserService;
+import com.fam.knightfam.photo_logic.entity.Photo;
+import com.fam.knightfam.photo_logic.repository.PhotoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,23 +20,25 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class PhotoService {
     private final S3Client s3Client;
+    private final SqsClient sqsClient;
     private final PhotoRepository photoRepository;
     private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(PhotoService.class);
     private final String bucketName;
     private final String region;
+    private final String queueUrl; // SQS queue URL
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PhotoService(Environment env,
                         PhotoRepository photoRepository,
@@ -42,6 +46,7 @@ public class PhotoService {
 
         this.bucketName = env.getProperty("aws.s3.bucket", "placeholder-bucket");
         this.region = env.getProperty("aws.s3.region", "us-east-2");
+        this.queueUrl = env.getProperty("aws.sqs.queueUrl", "https://sqs.us-east-2.amazonaws.com/your-account-id/your-queue-name");
 
         if (region == null || region.isBlank()) {
             throw new IllegalArgumentException("AWS S3 region cannot be null or blank");
@@ -49,17 +54,21 @@ public class PhotoService {
 
         this.photoRepository = photoRepository;
         this.userService = userService;
+
         this.s3Client = S3Client.builder()
+                .region(Region.of(this.region))
+                .credentialsProvider(DefaultCredentialsProvider.create())
+                .build();
+
+        this.sqsClient = SqsClient.builder()
                 .region(Region.of(this.region))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
 
-
     public String uploadPhoto(MultipartFile file, String email) throws IOException {
         log.info("Reached service");
         String s3Key = generateUniqueKey(file.getOriginalFilename(), email);
-
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -70,7 +79,6 @@ public class PhotoService {
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         String photoUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, s3Key);
-        //This is how the postgres photo metadata is able to point to the individual photos in the S3 bucket, using S3 Object URL
 
         User user = userService.findUserByEmail(email);
         if (user == null) {
@@ -78,7 +86,7 @@ public class PhotoService {
         }
 
         Photo photo = new Photo();
-        photo.setTitle("Some title");       // Title and description can later be provided by the client
+        photo.setTitle("Some title"); // Title can later be provided by the client
         photo.setDescription("Some description");
         photo.setUrl(photoUrl);
         photo.setS3ObjectKey(s3Key);
@@ -87,10 +95,11 @@ public class PhotoService {
 
         photoRepository.save(photo);
 
+        // Publish an event to SQS for additional processing (e.g., thumbnail generation)
+        publishPhotoUploadEvent(s3Key, photoUrl, email);
+
         return photoUrl;
     }
-
-    //method to upload profile pictures from the user page after a user has logged in.  This will populate when the user logs in
 
     public String uploadProfilePicture(MultipartFile file, String email) throws IOException {
         log.info("Starting uploadProfilePicture method");
@@ -128,14 +137,37 @@ public class PhotoService {
         } catch (DataAccessException e) {
             log.error("Database access error", e);
             throw new IOException("Error updating user information", e);
-        } catch (Exception e) { //hierarchical exception throwing???
-            //There is no reason to throw the exceptions this way -AK 3/29
+        } catch (Exception e) {
             log.error("Unexpected error", e);
             throw e;
         }
 
         log.info("Completed uploadProfilePicture method");
         return profilePicUrl;
+    }
+
+    private void publishPhotoUploadEvent(String s3Key, String photoUrl, String email) {
+        try {
+            // Create a simple event map; alternatively, create a dedicated POJO (e.g., PhotoUploadEvent)
+            Map<String, String> event = new HashMap<>();
+            event.put("s3Key", s3Key);
+            event.put("photoUrl", photoUrl);
+            event.put("email", email);
+            event.put("timestamp", LocalDateTime.now().toString());
+
+            String messageBody = objectMapper.writeValueAsString(event);
+
+            SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
+                    .queueUrl(queueUrl)
+                    .messageBody(messageBody)
+                    .build();
+
+            sqsClient.sendMessage(sendMsgRequest);
+            log.info("Published photo upload event to SQS for s3Key: {}", s3Key);
+        } catch (Exception e) {
+            log.error("Failed to publish photo upload event to SQS", e);
+            // Depending on your design, you may want to retry or handle this failure differently
+        }
     }
 
     private String generateUniqueKey(String originalFilename, String username) {
@@ -158,4 +190,3 @@ public class PhotoService {
         return profilePhoto;
     }
 }
-

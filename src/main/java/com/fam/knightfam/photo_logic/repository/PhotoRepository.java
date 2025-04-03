@@ -1,6 +1,6 @@
-package com.fam.knightfam.repository;
+package com.fam.knightfam.photo_logic.repository;
 
-import com.fam.knightfam.entity.Photo;
+import com.fam.knightfam.photo_logic.entity.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -50,4 +50,14 @@ public class AwsSecretsConfig {
     public String cognitoClientSecret(Map<String, String> awsSecrets) {
         return awsSecrets.get("COGNITO_CLIENT_SECRET");
     }
+
+    @Bean
+    public String dbUsername(Map<String, String> awsSecrets) {
+        return awsSecrets.get("DB_USERNAME");
+    }
+
+    @Bean
+    public String dbPassword(Map<String, String> awsSecrets) {
+        return awsSecrets.get("DB_PASSWORD");
+    }
 }

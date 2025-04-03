@@ -1,4 +1,4 @@
-package com.fam.knightfam;
+package com.fam.knightfam.photo_logic.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

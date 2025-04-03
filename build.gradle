@@ -23,22 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-/*dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'com.h2database:h2'
-
-
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'com.h2database:h2'
-}*/
-
 dependencies {
 	// OAuth2 client and security
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -51,16 +35,17 @@ dependencies {
 	implementation "software.amazon.awssdk:secretsmanager"
 	implementation "software.amazon.awssdk:regions"
 
-
+	//implementation 'io.awspring.cloud:spring-cloud-starter-aws-messaging'
+	implementation 'software.amazon.awssdk:sqs'
 
 	implementation 'software.amazon.awssdk:s3:2.25.21'
 
 
-	// Thymeleaf for server-side rendering
+	// thymeleaf for server-side rendering
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-	// JPA (if needed for other parts of your app)
+	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
 
@@ -72,7 +57,6 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'com.h2database:h2'
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()

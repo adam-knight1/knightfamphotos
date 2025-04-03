@@ -1,5 +1,6 @@
-package com.fam.knightfam.entity;
+package com.fam.knightfam.photo_logic.entity;
 
+import com.fam.knightfam.main_logic.entity.User;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.time.LocalDateTime;
@@ -10,7 +11,6 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
     private String s3ObjectKey;

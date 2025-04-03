@@ -1,5 +1,5 @@
 
-package com.fam.knightfam.entity;
+package com.fam.knightfam.main_logic.entity;
 
 import jakarta.persistence.*;
 import java.util.UUID;

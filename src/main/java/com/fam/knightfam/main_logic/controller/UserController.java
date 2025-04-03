@@ -1,14 +1,11 @@
-package com.fam.knightfam.controller;
+package com.fam.knightfam.main_logic.controller;
 
-import com.fam.knightfam.entity.User;
-import com.fam.knightfam.service.UserService;
+import com.fam.knightfam.main_logic.entity.User;
+import com.fam.knightfam.main_logic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")

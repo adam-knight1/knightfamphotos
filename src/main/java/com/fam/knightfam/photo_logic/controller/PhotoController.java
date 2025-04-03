@@ -1,9 +1,9 @@
-package com.fam.knightfam.controller;
+package com.fam.knightfam.photo_logic.controller;
 
-import com.fam.knightfam.entity.Photo;
-import com.fam.knightfam.entity.User;
-import com.fam.knightfam.service.PhotoService;
-import com.fam.knightfam.service.UserService;
+import com.fam.knightfam.main_logic.entity.User;
+import com.fam.knightfam.main_logic.service.UserService;
+import com.fam.knightfam.photo_logic.entity.Photo;
+import com.fam.knightfam.photo_logic.service.PhotoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
