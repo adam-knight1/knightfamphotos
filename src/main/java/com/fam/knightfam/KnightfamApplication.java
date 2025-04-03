@@ -14,7 +14,7 @@ public class KnightfamApplication {
 
 	public static void main(String[] args) {
 		// Retrieve secrets from AWS Secrets Manager
-		Map<String, String> secrets = AwsSecretsConfig();
+		/*Map<String, String> secrets = AwsSecretsConfig();
 
 		// Set the database username and password as system properties
 		// so that Spring Boot picks them up during auto-configuration
@@ -23,7 +23,7 @@ public class KnightfamApplication {
 			System.setProperty("spring.datasource.password", secrets.get("DB_PASSWORD"));
 		}
 
-
+*/
 
 		SpringApplication.run(KnightfamApplication.class, args);
 	}
