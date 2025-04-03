@@ -33,6 +33,7 @@ public class UserService {
                         new UsernameNotFoundException("User not found with username: " + username));
     }
 
+
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
