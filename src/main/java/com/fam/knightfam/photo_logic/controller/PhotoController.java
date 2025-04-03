@@ -22,7 +22,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/photos")
 public class PhotoController {
-
     private final PhotoService photoService;
     private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(PhotoController.class);
