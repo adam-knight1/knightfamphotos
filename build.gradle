@@ -46,7 +46,9 @@ dependencies {
 
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.postgresql:postgresql:42.7.3' // might not be lts
 	runtimeOnly 'org.postgresql:postgresql'
+
 
 
 	compileOnly 'org.projectlombok:lombok'
