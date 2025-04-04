@@ -2,9 +2,10 @@ spring:
   application:
     name: knightfam
   datasource:
-    url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com/knightfam
+    url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
     username: famknight
-    password: Banjodog
+    password: es5zta3~1moZklDmG*K*QNe!BUhW
+
   jpa:
     hibernate:
       ddl-auto: update

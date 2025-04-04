@@ -1,5 +1,7 @@
 package com.fam.knightfam.auth;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -10,47 +12,46 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
-    private final String domain;         // cognito domain
-    private final String clientId;       // Cognito App Client ID
-    private final String logoutRedirectUrl;  // Where to redirect after logout
+    private final String domain;
+    private final String clientId;
+    private final String logoutRedirectUrl;
 
-    public CognitoLogoutHandler(String domain, String clientId, String logoutRedirectUrl) {
+    public CognitoLogoutHandler(String domain, String logoutRedirectUrl) {
+        Map<String, String> secrets = fetchSecrets(); // Use utility method
+
         this.domain = domain;
-        this.clientId = clientId;
+        this.clientId = secrets.get("clientId");
         this.logoutRedirectUrl = logoutRedirectUrl;
     }
 
-    //testing this method out to use secrets manager
-    public static void getSecret() {
-
+    private static Map<String, String> fetchSecrets() {
         String secretName = "Cognito-user-data";
         Region region = Region.of("us-east-2");
 
-        // creating a Secret Manager client
-        SecretsManagerClient client = SecretsManagerClient.builder()
-                .region(region)
-                .build();
+        SecretsManagerClient client = SecretsManagerClient.builder().region(region).build();
 
-        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+        GetSecretValueRequest request = GetSecretValueRequest.builder()
                 .secretId(secretName)
                 .build();
 
-        GetSecretValueResponse getSecretValueResponse;
+        GetSecretValueResponse response = client.getSecretValue(request);
 
+        String json = response.secretString();
+
+        // Convert JSON to Map
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
-        } catch (Exception e) {
-            // For a list of exceptions
-            // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-            throw e;
+            return mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to parse secret JSON", e);
         }
-
-        String secret = getSecretValueResponse.secretString();
     }
 
     @Override
@@ -64,3 +65,4 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
                 .toUriString();
     }
 }
+

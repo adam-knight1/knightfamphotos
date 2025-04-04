@@ -26,20 +26,16 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           String cognitoClientId,
-                                           String cognitoClientSecret,
-                                           Environment env) throws Exception {
-//todo remove these hardcodes
-        String cognitoDomain = env.getProperty("cognito.domain", "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com");
-        String logoutRedirectUrl = env.getProperty("cognito.logout-redirect-url", "http://localhost:8080/");
-
-        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain, cognitoClientId, logoutRedirectUrl);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(
+                this.cognitoDomain,
+                this.logoutRedirectUrl
+        );
 
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**", "/api/photos").permitAll() //todo fix api permissions
+                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**", "/api/photos").permitAll()
                         .anyRequest().authenticated()
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
@@ -51,6 +47,7 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
