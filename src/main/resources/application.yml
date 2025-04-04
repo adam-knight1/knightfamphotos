@@ -4,9 +4,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
-    username: famknight
-    password: banjo123
+    url: "jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam"
+    username: "famknight"
+    password: "banjo123"
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

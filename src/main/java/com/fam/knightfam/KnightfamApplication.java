@@ -24,8 +24,12 @@ public class KnightfamApplication {
 		}
 
 */
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("uh oh");
+		}
 
 		SpringApplication.run(KnightfamApplication.class, args);
 	}
-
 }
