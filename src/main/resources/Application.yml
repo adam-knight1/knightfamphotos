@@ -2,11 +2,13 @@ spring:
   application:
     name: knightfam
   datasource:
+    driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
     username: famknight
     password: es5zta3~1moZklDmG*K*QNe!BUhW
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
   security:
