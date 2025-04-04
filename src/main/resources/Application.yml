@@ -1,4 +1,13 @@
 spring:
+  application:
+    name: knightfam
+  datasource:
+    url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com/knightfam
+    username: famknight
+    password: Banjodog
+  jpa:
+    hibernate:
+      ddl-auto: update
   security:
     oauth2:
       client:
@@ -6,17 +15,15 @@ spring:
           cognito:
             client-id: ${COGNITO_CLIENT_ID:placeholder}
             client-secret: ${COGNITO_CLIENT_SECRET:placeholder}
-            provider: cognito   # adding this to link registration to provider
+            provider: cognito  # links registration to provider
             scope:
               - openid
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-
         provider:
           cognito:
-            issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk
-            # Spring uses this to fetch OIDC discovery info
+            issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fxk
 
 logging:
   level:
