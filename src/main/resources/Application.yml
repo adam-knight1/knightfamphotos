@@ -1,9 +1,4 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
   security:
     oauth2:
       client:
@@ -11,7 +6,7 @@ spring:
           cognito:
             client-id: ${COGNITO_CLIENT_ID:placeholder}
             client-secret: ${COGNITO_CLIENT_SECRET:placeholder}
-            provider: cognito   # ✅ add this to link registration to provider
+            provider: cognito   # adding this to link registration to provider
             scope:
               - openid
               - email
@@ -22,14 +17,6 @@ spring:
           cognito:
             issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk
             # Spring uses this to fetch OIDC discovery info
-
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
 
 logging:
   level:

@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
-    private final String domain;         // example "https://mydomain.auth.region.amazoncognito.com", will update
+    private final String domain;         // cognito domain
     private final String clientId;       // Cognito App Client ID
     private final String logoutRedirectUrl;  // Where to redirect after logout
 
@@ -31,7 +31,7 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
         String secretName = "Cognito-user-data";
         Region region = Region.of("us-east-2");
 
-        // Create a Secrets Manager client
+        // creating a Secret Manager client
         SecretsManagerClient client = SecretsManagerClient.builder()
                 .region(region)
                 .build();
@@ -45,7 +45,7 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
         try {
             getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
         } catch (Exception e) {
-            // For a list of exceptions thrown, see
+            // For a list of exceptions
             // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
             throw e;
         }

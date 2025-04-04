@@ -13,46 +13,10 @@ import org.springframework.security.web.savedrequest.NullRequestCache;
 
 import java.util.Map;
 
-/*
 @Configuration
 public class SecurityConfiguration {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, Environment env) throws Exception {
-        String clientId = env.getProperty("spring.security.oauth2.client.registration.cognito.client-id", "placeholder");
-        String cognitoDomain = env.getProperty("cognito.domain", "https://example.auth.us-east-2.amazoncognito.com");
-        String logoutRedirectUrl = env.getProperty("cognito.logout-redirect-url", "http://localhost:8080/");
-
-        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain, clientId, logoutRedirectUrl);
-
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
-                .oauth2Login(oauth -> oauth
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                )
-                .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
-
-        return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-}
-
-*/
-@Configuration
-public class SecurityConfiguration {
-
     private final String clientId;
-    private final String cognitoDomain;
+    private final String cognitoDomain; //todo assign env variables
     private final String logoutRedirectUrl;
 
     public SecurityConfiguration(@Qualifier("cognitoSecrets") Map<String, String> secrets, Environment env) {
