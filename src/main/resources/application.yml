@@ -18,8 +18,8 @@ spring:
       client:
         registration:
           cognito:
-            client-id: "1eddhu1oale604stl9e348bq0i"
-            client-secret: "1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc"
+            client-id: 1eddhu1oale604stl9e348bq0i
+            client-secret: 1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc
             provider: cognito
             scope:
               - openid
@@ -28,7 +28,7 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           cognito:
-             issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fxk"
+             issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
              user-name-attribute: username
 
 logging:
