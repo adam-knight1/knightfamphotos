@@ -22,7 +22,7 @@ public class SecurityConfiguration {
     // Removed the cognitoSecrets dependency
     public SecurityConfiguration(Environment env) {
         // Provide a fallback if necessary
-        this.clientId = "placeholder";  // You could also load this from env if desired.
+        this.clientId = "1eddhu1oale604stl9e348bq0i";  // You could also load this from env if desired.
         this.cognitoDomain = env.getProperty("cognito.domain", "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com");
         this.logoutRedirectUrl = env.getProperty("cognito.logout-redirect-url", "http://localhost:8080/");
     }
@@ -41,10 +41,10 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
-               /* .oauth2Login(oauth -> oauth   commenting out to get container running
+                .oauth2Login(oauth -> oauth
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-                )*/
+                )
                 .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
 
         return http.build();

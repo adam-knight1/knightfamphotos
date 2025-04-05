@@ -20,14 +20,14 @@ import java.util.Map;
 public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     private final String domain;
-    private final String clientId;
+    private String clientId = "1eddhu1oale604stl9e348bq0i";
     private final String logoutRedirectUrl;
 
     public CognitoLogoutHandler(String domain, String logoutRedirectUrl) {
         Map<String, String> secrets = fetchSecrets(); // Use utility method
 
         this.domain = domain;
-        this.clientId = secrets.get("clientId");
+       // this.clientId = //secrets.get("clientId");
         this.logoutRedirectUrl = logoutRedirectUrl;
     }
 
