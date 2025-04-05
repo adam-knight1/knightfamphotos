@@ -44,7 +44,6 @@ public class SecurityConfiguration {
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
                 .oauth2Login(oauth -> oauth
-                        .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
