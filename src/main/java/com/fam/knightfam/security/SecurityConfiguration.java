@@ -41,10 +41,10 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
-                .oauth2Login(oauth -> oauth
+               /* .oauth2Login(oauth -> oauth   commenting out to get container running
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-                )
+                )*/
                 .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
 
         return http.build();
