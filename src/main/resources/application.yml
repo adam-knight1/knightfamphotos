@@ -13,22 +13,22 @@ spring:
     hibernate:
       ddl-auto: update
 
-  security:
-    oauth2:
-      client:
-        registration:
-          cognito:
-            client-id: ${COGNITO_CLIENT_ID:placeholder}
-            client-secret: ${COGNITO_CLIENT_SECRET:placeholder}
-            provider: cognito
-            scope:
-              - openid
-              - email
-              - profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        provider:
-          cognito:
-            issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fxk
+  #security:
+    #oauth2:
+     # client:
+      #  registration:
+       #   cognito:
+        #    client-id: ${COGNITO_CLIENT_ID:placeholder}
+         #   client-secret: ${COGNITO_CLIENT_SECRET:placeholder}
+          #  provider: cognito
+           # scope:
+            #  - openid
+             # - email
+              #- profile
+           # redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+       # provider:
+         # cognito:
+          #  issuer-uri: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fxk
 
 logging:
   level:
