@@ -18,15 +18,15 @@ import java.util.Map;
 @EnableWebSecurity
 public class SecurityConfiguration {
     private String clientId = "1eddhu1oale604stl9e348bq0i";
-    private String cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
+    private String cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com";
     private String logoutRedirectUrl = "http://localhost:8080/";
 
     // Removed the cognitoSecrets dependency
     public SecurityConfiguration(Environment env) {
         // Provide a fallback if necessary
-        this.clientId = "1eddhu1oale604stl9e348bq0i";  // You could also load this from env if desired.
-        this.cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com");
-        this.logoutRedirectUrl = "http://localhost:8080/");
+        this.clientId = "1eddhu1oale604stl9e348bq0i";  // can also load this from env if desired.
+        this.cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com";
+        this.logoutRedirectUrl = "http://localhost:8080/";
     }
 
     @Bean
