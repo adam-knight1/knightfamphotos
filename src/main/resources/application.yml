@@ -40,8 +40,11 @@ logging:
     org.springframework.security: DEBUG
 
 cognito:
-  domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
-  logout-redirect-url: "http://localhost:8080/"
+  domain: "https://your-pool-domain.auth.us-east-2.amazoncognito.com"
+  logout-redirect-url: "https://knightfam.com"
+
+server:
+  forward-headers-strategy: framework
 
 aws:
   s3:
