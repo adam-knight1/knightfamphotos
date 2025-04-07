@@ -20,14 +20,13 @@ import java.util.Map;
 public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     private final String domain;
-    private String clientId = "1eddhu1oale604stl9e348bq0i";
+    private final String clientId;
     private final String logoutRedirectUrl;
 
     public CognitoLogoutHandler(String domain, String logoutRedirectUrl) {
-        Map<String, String> secrets = fetchSecrets(); // Use utility method
-
+        Map<String, String> secrets = fetchSecrets();
         this.domain = domain;
-       // this.clientId = //secrets.get("clientId");
+        this.clientId = secrets.getOrDefault("clientId", "1eddhu1oale604stl9e348bq0i");
         this.logoutRedirectUrl = logoutRedirectUrl;
     }
 
@@ -37,18 +36,11 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
         SecretsManagerClient client = SecretsManagerClient.builder().region(region).build();
 
-        GetSecretValueRequest request = GetSecretValueRequest.builder()
-                .secretId(secretName)
-                .build();
+        GetSecretValueResponse response = client.getSecretValue(
+                GetSecretValueRequest.builder().secretId(secretName).build());
 
-        GetSecretValueResponse response = client.getSecretValue(request);
-
-        String json = response.secretString();
-
-        // Convert JSON to Map
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(json, new TypeReference<Map<String, String>>() {});
+            return new ObjectMapper().readValue(response.secretString(), new TypeReference<>() {});
         } catch (IOException e) {
             throw new RuntimeException("Unable to parse secret JSON", e);
         }
@@ -56,13 +48,12 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        // Build Cognito logout URL
         return UriComponentsBuilder
-                .fromUri(URI.create(domain + "/logout"))
+                .fromHttpUrl(domain + "/logout")
                 .queryParam("client_id", clientId)
                 .queryParam("logout_uri", logoutRedirectUrl)
-                .encode(StandardCharsets.UTF_8)
                 .build()
                 .toUriString();
     }
 }
-
