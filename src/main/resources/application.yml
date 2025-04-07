@@ -8,6 +8,10 @@ spring:
     username: "famknight"
     password: "banjo123"
 
+  server:
+    port: 8080
+    address: 0.0.0.0
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
