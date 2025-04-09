@@ -58,6 +58,12 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //this is to return an html view so it works with thymeleaf.
+    @GetMapping("/photo")
+    public String photoUploadForm() {
+        return "photo"; // → Returns a Thymeleaf HTML page
+    }
+
 
     @PostMapping("/upload/profile")
     public ResponseEntity<?> uploadProfilePicture(@RequestParam("file") MultipartFile file,
