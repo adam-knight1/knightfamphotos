@@ -21,13 +21,11 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     private final String domain;
     private final String clientId;
-    private final String logoutRedirectUrl;
 
-    public CognitoLogoutHandler(String domain, String logoutRedirectUrl) {
+    public CognitoLogoutHandler(String domain) {
         Map<String, String> secrets = fetchSecrets();
         this.domain = domain;
         this.clientId = secrets.getOrDefault("clientId", "1eddhu1oale604stl9e348bq0i");
-        this.logoutRedirectUrl = logoutRedirectUrl;
     }
 
     private static Map<String, String> fetchSecrets() {
@@ -48,11 +46,19 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        // Build Cognito logout URL
+        String host = request.getServerName();
+
+        String redirectUrl;
+        if (host.contains("localhost")) {
+            redirectUrl = "http://localhost:8080/";
+        } else {
+            redirectUrl = "https://knightfam.com/";
+        }
+
         return UriComponentsBuilder
                 .fromHttpUrl(domain + "/logout")
                 .queryParam("client_id", clientId)
-                .queryParam("logout_uri", logoutRedirectUrl)
+                .queryParam("logout_uri", redirectUrl)
                 .build()
                 .toUriString();
     }
