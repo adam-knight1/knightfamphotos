@@ -14,7 +14,7 @@ import org.springframework.security.web.savedrequest.NullRequestCache;
 
 import java.util.Map;
 
-@@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
