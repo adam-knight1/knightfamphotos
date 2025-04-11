@@ -14,27 +14,23 @@ import org.springframework.security.web.savedrequest.NullRequestCache;
 
 import java.util.Map;
 
-@Configuration
+@@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-    private String clientId = "1eddhu1oale604stl9e348bq0i";
-    private String cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com";
-   // private String logoutRedirectUrl = "http://localhost:8080/";
-   private String logoutRedirectUrl = "http://localhost:8080/";
 
-    // Removed the cognitoSecrets dependency
+    private String clientId = "1eddhu1oale604stl9e348bq0i";
+    private String cognitoDomain = "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com";
+    private String logoutRedirectUrl = "https://knightfam.com";
+
     public SecurityConfiguration(Environment env) {
-        // Provide a fallback if necessary
-        this.clientId = "1eddhu1oale604stl9e348bq0i";  // can also load this from env if desired.
-        this.cognitoDomain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com";
+        this.clientId = "1eddhu1oale604stl9e348bq0i";
+        this.cognitoDomain = "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com";
         this.logoutRedirectUrl = "https://knightfam.com";
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(
-                this.cognitoDomain
-        );
+        CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain);
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -50,31 +46,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-   //below is the suggested template from cognito docs
-
-       /* @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            CognitoLogoutHandler cognitoLogoutHandler = new CognitoLogoutHandler();
-
-            http.csrf(Customizer.withDefaults())
-                    .authorizeHttpRequests(authz -> authz
-                            .requestMatchers("/").permitAll()
-                            .anyRequest()
-                            .authenticated())
-                    .oauth2Login(Customizer.withDefaults())
-                    .logout(logout -> logout.logoutSuccessHandler(cognitoLogoutHandler));
-            return http.build();
-        }
-    }*/
-       @Bean
-       public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-           http
-                   .logout(logout -> logout
-                           .logoutSuccessHandler(new CognitoLogoutHandler("https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com"))
-                   );
-           return http.build();
-       }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
