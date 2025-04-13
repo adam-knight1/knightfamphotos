@@ -5,6 +5,7 @@ import com.fam.knightfam.config.S3Properties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.env.Environment;
 
 import java.util.Map;
 
@@ -13,6 +14,10 @@ import java.util.Map;
 public class KnightfamApplication {
 
 	public static void main(String[] args) {
+
+
+
+
 		// Retrieve secrets from AWS Secrets Manager
 		/*Map<String, String> secrets = AwsSecretsConfig();
 
