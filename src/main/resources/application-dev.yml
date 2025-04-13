@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
+    username: famknight
+    password: banjo123
+
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            redirect-uri: "http://localhost:8080/login/oauth2/code/cognito"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+cognito:
+  domain: "https://4l2pj9fxk.auth.us-east-2.amazoncognito.com"
+  logout-redirect-url: "http://localhost:8080"
+
+server:
+  address: 0.0.0.0
+  port: 8080
+
+aws:
+  s3:
+    bucket: knightfam-s3
+    region: us-east-2
