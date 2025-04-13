@@ -43,7 +43,6 @@ cognito:
   domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
   logout-redirect-url: "https://knightfam.com"
 
-
 server:
   forward-headers-strategy: framework
 
