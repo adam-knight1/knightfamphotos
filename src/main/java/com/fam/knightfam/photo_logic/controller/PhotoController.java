@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,29 +37,34 @@ public class PhotoController {
     public ResponseEntity<?> uploadPhoto(@RequestParam("file") MultipartFile file,
                                          @RequestParam("title") String title,
                                          @RequestParam("description") String description,
-                                         @AuthenticationPrincipal OAuth2AuthenticationToken auth) {
+                                         @AuthenticationPrincipal OidcUser principal) {
 
-        String email = (String) auth.getPrincipal().getAttributes().get("email");
+        String email = principal.getEmail(); // or principal.getAttribute("email")
+        String name = principal.getName();
         log.info("Received file: {}", file.getOriginalFilename());
         log.info("Title: {}, Description: {}", title, description);
         log.info("Authenticated user email: {}", email);
+
+        User user = userService.getOrCreateUserFromCognito(email, name);
+
+
+        log.info("Received file: {}", file.getOriginalFilename());
+        log.info("Title: {}, Description: {}", title, description);
+        log.info("Authenticated Cognito user: {}", email);
 
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File must not be empty.");
         }
 
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No authenticated user found.");
-        }
-
         try {
-            String photoUrl = photoService.uploadPhoto(file, title, description, email);
+            String photoUrl = photoService.uploadPhoto(file, title, description, user.getEmail());
             return ResponseEntity.ok(Map.of("url", photoUrl));
         } catch (Exception e) {
             log.error("Error uploading photo", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
 
     //this is to return an html view so it works with thymeleaf.
     @GetMapping("/photo")

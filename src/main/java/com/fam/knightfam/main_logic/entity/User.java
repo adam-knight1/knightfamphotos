@@ -19,24 +19,17 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;
 
-    public User() {
-    }
+    public User() {}
 
-    public User(UUID userId, String email, String name, String password, String profilePictureUrl) {
+    public User(UUID userId, String email, String name, String profilePictureUrl) {
         this.userId = userId;
         this.email = email;
         this.name = name;
-        this.password = password;
         this.profilePictureUrl = profilePictureUrl;
     }
-
-    // Getters and Setters
 
     public UUID getUserId() {
         return userId;
@@ -62,14 +55,6 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
@@ -78,3 +63,4 @@ public class User {
         this.profilePictureUrl = profilePictureUrl;
     }
 }
+

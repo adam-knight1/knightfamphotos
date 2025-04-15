@@ -22,16 +22,15 @@ public class UserService {
 
     public User createUser(User user) {
         // Encode the password for security
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         logger.info("Saving user with name: {}", user.getName());
         return userRepository.save(user);
     }
 
-    public User findUserByUsername(String username) {
+    /*public User findUserByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username: " + username));
-    }
+    }*/
 
 
     public User findUserByEmail(String email) {
@@ -54,5 +53,14 @@ public class UserService {
     public void updateUser(User user) {
         userRepository.save(user);
     }
-}
 
+
+    public User getOrCreateUserFromCognito(String email, String name) {
+        return userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setName(name);
+            return userRepository.save(newUser);
+        });
+    }
+}

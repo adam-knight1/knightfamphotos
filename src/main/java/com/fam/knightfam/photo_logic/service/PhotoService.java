@@ -37,7 +37,7 @@ public class PhotoService {
     private static final Logger log = LoggerFactory.getLogger(PhotoService.class);
     private final String bucketName;
     private final String region;
-    private final String queueUrl; // SQS queue URL
+    private final String queueUrl = "https://sqs.us-east-2.amazonaws.com/913524908137/photo-uploads";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PhotoService(Environment env,
@@ -46,7 +46,6 @@ public class PhotoService {
 
         this.bucketName = env.getProperty("aws.s3.bucket", "placeholder-bucket");
         this.region = env.getProperty("aws.s3.region", "us-east-2");
-        this.queueUrl = env.getProperty("aws.sqs.queueUrl", "https://sqs.us-east-2.amazonaws.com/your-account-id/your-queue-name");
 
         if (region == null || region.isBlank()) {
             throw new IllegalArgumentException("AWS S3 region cannot be null or blank");
@@ -73,7 +72,7 @@ public class PhotoService {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(s3Key)
-                .acl("public-read")
+                /*.acl("public-read")*/
                 .build();
 
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
@@ -109,7 +108,7 @@ public class PhotoService {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(s3Key)
-                .acl("public-read")
+                //.acl("public-read") not supported by S3 as per ACL defaults
                 .build();
 
         try {
