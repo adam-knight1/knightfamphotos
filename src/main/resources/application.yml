@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: "jdbc:postgresql://knightfamdb2.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam"
+    url: "jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com"
     username: "famknight"
     password: "banjo123"
 
