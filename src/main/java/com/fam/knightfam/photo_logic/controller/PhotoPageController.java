@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 
 //this differs from the photo logic controller, this is mainly concerned with
 //how photos are viewed rather than how they are processed, I wanted some separation of concern.
@@ -21,10 +22,11 @@ public class PhotoPageController {
 
     @GetMapping("/gallery")
     public String galleryPage(Model model) {
-        List<Photo> photos = photoService.getAllPhotos();
-        model.addAttribute("photos", photos);
+        List<Map<String, Object>> photosWithUrls = photoService.getAllPhotosWithPresignedUrls();
+        model.addAttribute("photos", photosWithUrls);
         return "gallery";
     }
+
 
 
     @GetMapping("/photo")

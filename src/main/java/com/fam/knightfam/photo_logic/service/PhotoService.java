@@ -7,6 +7,10 @@ import com.fam.knightfam.photo_logic.repository.PhotoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 import org.springframework.core.env.Environment;
@@ -21,12 +25,16 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+
+
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PhotoService {
@@ -39,6 +47,8 @@ public class PhotoService {
     private final String region;
     private final String queueUrl = "https://sqs.us-east-2.amazonaws.com/913524908137/photo-uploads";
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final S3Presigner s3Presigner;
+
 
     public PhotoService(Environment env,
                         PhotoRepository photoRepository,
@@ -46,6 +56,10 @@ public class PhotoService {
 
         this.bucketName = env.getProperty("aws.s3.bucket", "placeholder-bucket");
         this.region = env.getProperty("aws.s3.region", "us-east-2");
+        this.s3Presigner = S3Presigner.builder()
+                .region(Region.of(this.region))
+                .credentialsProvider(DefaultCredentialsProvider.create())
+                .build();
 
         if (region == null || region.isBlank()) {
             throw new IllegalArgumentException("AWS S3 region cannot be null or blank");
@@ -188,4 +202,32 @@ public class PhotoService {
         profilePhoto.setUrl(user.getProfilePictureUrl());
         return profilePhoto;
     }
+
+    public String generatePresignedUrl(String s3Key) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .build();
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .getObjectRequest(getObjectRequest)
+                .build();
+
+        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+        return presignedRequest.url().toString();
+    }
+
+    public List<Map<String, Object>> getAllPhotosWithPresignedUrls() {
+        return photoRepository.findAll().stream().map(photo -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("title", photo.getTitle());
+            map.put("description", photo.getDescription());
+            map.put("uploadTime", photo.getUploadTime());
+            map.put("url", generatePresignedUrl(photo.getS3ObjectKey())); // Uses your presigned URL method
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+
 }

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*Photo service contains business logic for photo actions such as uploading, deleting photos.  Interacts with Photo Controller and repo
 * Photos are uploaded to S3 bucket, while metadata is uploaded to RDS and references the corresponding bucket*/
@@ -85,15 +87,36 @@ public class PhotoController {
         }
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<List<Photo>> getAllPhotos() {
+    /*@GetMapping("/get")
+    public ResponseEntity<List<Map<String, Object>>> getAllPhotos() {
         try {
             List<Photo> photos = photoService.getAllPhotos();
-            return ResponseEntity.ok(photos);
+            List<Map<String, Object>> response = photos.stream().map(photo -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("title", photo.getTitle());
+                map.put("description", photo.getDescription());
+                map.put("uploadTime", photo.getUploadTime());
+                map.put("url", photoService.generatePresignedUrl(photo.getS3ObjectKey())); //replacing with signed URL
+                return map;
+            }).collect(Collectors.toList());
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
+    }*/
+
+    @GetMapping("/get")
+    public ResponseEntity<List<Map<String, Object>>> getAllPhotos() {
+        try {
+            return ResponseEntity.ok(photoService.getAllPhotosWithPresignedUrls());
+        } catch (Exception e) {
+            log.error("Failed to retrieve photos", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
     }
+
+
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfilePhoto(@AuthenticationPrincipal Jwt jwt) {
