@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +36,9 @@ public class PhotoController {
     public ResponseEntity<?> uploadPhoto(@RequestParam("file") MultipartFile file,
                                          @RequestParam("title") String title,
                                          @RequestParam("description") String description,
-                                         @AuthenticationPrincipal Jwt jwt) {
-        String email = jwt.getClaimAsString("email");
+                                         @AuthenticationPrincipal OAuth2AuthenticationToken auth) {
+
+        String email = (String) auth.getPrincipal().getAttributes().get("email");
         log.info("Received file: {}", file.getOriginalFilename());
         log.info("Title: {}, Description: {}", title, description);
         log.info("Authenticated user email: {}", email);
@@ -57,6 +59,7 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
     //this is to return an html view so it works with thymeleaf.
     @GetMapping("/photo")
     public String photoUploadForm() {
