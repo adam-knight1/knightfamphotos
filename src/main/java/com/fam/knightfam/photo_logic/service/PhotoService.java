@@ -66,7 +66,7 @@ public class PhotoService {
                 .build();
     }
 
-    public String uploadPhoto(MultipartFile file, String email) throws IOException {
+    public String uploadPhoto(MultipartFile file, String title, String description, String email) throws IOException {
         log.info("Reached service");
         String s3Key = generateUniqueKey(file.getOriginalFilename(), email);
 
@@ -86,8 +86,8 @@ public class PhotoService {
         }
 
         Photo photo = new Photo();
-        photo.setTitle("Some title"); // Title can later be provided by the client
-        photo.setDescription("Some description");
+        photo.setTitle(title); //testing testing 123
+        photo.setDescription(description);
         photo.setUrl(photoUrl);
         photo.setS3ObjectKey(s3Key);
         photo.setUser(user);

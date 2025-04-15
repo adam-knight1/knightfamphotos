@@ -33,25 +33,24 @@ public class PhotoController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPhoto(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("title") String title,
+                                         @RequestParam("description") String description,
                                          @AuthenticationPrincipal Jwt jwt) {
-        // Extracting email from the JWT claims
         String email = jwt.getClaimAsString("email");
         log.info("Received file: {}", file.getOriginalFilename());
+        log.info("Title: {}, Description: {}", title, description);
         log.info("Authenticated user email: {}", email);
 
-        if (file.isEmpty()) {  //removed file==null
-            log.error("File must not be empty.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File must not be empty.");
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File must not be empty.");
         }
 
         if (email == null) {
-            log.error("No authenticated user email found.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No authenticated user found.");
         }
 
         try {
-            String photoUrl = photoService.uploadPhoto(file, email);
-            log.info("Photo uploaded successfully: {}", photoUrl);
+            String photoUrl = photoService.uploadPhoto(file, title, description, email);
             return ResponseEntity.ok(Map.of("url", photoUrl));
         } catch (Exception e) {
             log.error("Error uploading photo", e);

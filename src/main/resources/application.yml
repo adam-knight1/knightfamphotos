@@ -13,9 +13,11 @@ spring:
     address: 0.0.0.0
 
   jpa:
+    show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+      format_sql: true
 
   security:
     oauth2:
@@ -32,12 +34,14 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           cognito:
-             issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
-             user-name-attribute: username
+            issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
+            user-name-attribute: username
 
 logging:
   level:
     org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 cognito:
   domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
