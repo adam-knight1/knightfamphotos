@@ -20,6 +20,13 @@
     </div>
 </nav>
 
+<div class="container mt-3">
+    <button class="btn btn-secondary" onclick="history.back()">⬅️ Back</button>
+</div>
+<div class="container mt-3">
+    <a href="/user-page.html" class="btn btn-secondary">⬅️ Back</a>
+</div>
+
 <div class="container mt-5">
     <h2 class="text-center mb-4">📤 Upload a Family Photo</h2>
     <form action="/photos/upload" method="post" enctype="multipart/form-data">
@@ -36,6 +43,7 @@
             <input class="form-control" type="file" id="file" name="file" accept="image/*" required>
         </div>
         <button type="submit" class="btn btn-primary">Upload</button>
+        <button class="btn btn-secondary" onclick="history.back()">⬅️ Back</button>
     </form>
 </div>
 

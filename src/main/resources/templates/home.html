@@ -37,14 +37,14 @@
         <div class="col-md-8 col-lg-6">
             <div class="card p-4 mt-5 text-center">
                 <h2 class="mb-3">Welcome to Knightfam 👑</h2>
-                <p class="lead">You're successfully logged in with AWS Cognito!</p>
+                <p class="lead">A place for all of us to connect!</p>
 
                 <div th:if="${#authentication}">
                     <p><strong>Username:</strong> <span th:text="${#authentication.name}">username</span></p>
                 </div>
 
                 <a class="btn btn-primary mt-3" href="/oauth2/authorization/cognito">
-                    Get Started/Login
+                    Get Started
                 </a>
             </div>
         </div>
