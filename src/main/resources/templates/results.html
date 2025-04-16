@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Poll Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/user-page.html">Knightfam</a>
+        <a class="btn btn-outline-danger ms-auto" href="/logout">Log out</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="mb-4" th:text="'Results: ' + ${vote.question}">Poll Question</h2>
+
+    <table class="table">
+        <thead>
+        <tr><th>Option</th><th>Votes</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${vote.voteCounts.entrySet()}">
+            <td th:text="${entry.key}">Option Text</td>
+            <td th:text="${entry.value}">0</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="alert alert-success">
+        Winner: <strong th:text="${winner}">—</strong>
+    </div>
+
+    <a th:href="@{/vote/voting}" class="btn btn-primary">Back to Polls</a>
+</div>
+</body>
+</html>

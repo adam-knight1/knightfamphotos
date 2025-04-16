@@ -37,4 +37,12 @@ public class VotingService {
         vote.getVoteCounts().merge(option, 1, Integer::sum);
         return voteRepository.save(vote);
     }
+
+    @Transactional(readOnly = true)
+    public Vote getVoteById(Long voteId) {
+        return voteRepository.findById(voteId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid vote ID: " + voteId));
+    }
+
+
 }

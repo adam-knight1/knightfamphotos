@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fam.knightfam.voting.model.Vote;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/vote")
@@ -66,7 +67,22 @@ public class VotingController {
                              @RequestParam("selectedOption") String selectedOption) {
 
         votingService.submitVote(voteId, selectedOption);
-        return "redirect:/vote/voting";
+        // ← redirect to the results page for this vote
+        return "redirect:/vote/results/" + voteId;
+    }
+
+    @GetMapping("/results/{voteId}")
+    public String showResults(@PathVariable Long voteId, Model model) {
+        Vote vote = votingService.getVoteById(voteId);
+        model.addAttribute("vote", vote);
+
+        String winner = vote.getVoteCounts().entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("—");
+        model.addAttribute("winner", winner);
+
+        return "results";  // renders results.html
     }
 }
 
