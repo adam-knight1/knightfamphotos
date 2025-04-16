@@ -44,9 +44,11 @@
             <div class="option-card text-center">
                 <h4>📸 Family Voting </h4>
                 <p>Vote on some funny topics! </p>
-                <a class="btn btn-primary" th:href="@{/gallery}">Create a poll</a>
-                <a class="btn btn-primary" th:href="@{/photo}">Vote on a poll</a>
+                <a th:href="@{/vote/create}" class="btn btn-secondary">Create a Vote</a>
+                <a th:href="@{/vote/voting}" class="btn btn-primary">Vote</a>
+
             </div>
+            <form th:action="@{/vote/submit}" method="post">
 
             <!-- add more options here if needed -->
         </div>

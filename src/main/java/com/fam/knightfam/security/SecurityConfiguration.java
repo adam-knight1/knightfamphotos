@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
-                        .requestMatchers("/api/photos/**", "/user-page", "/gallery.html").authenticated()
+                        .requestMatchers("/api/photos/**", "/vote/**", "/user-page", "/gallery.html", "/voting.html","createvote.html").authenticated()
                         .anyRequest().authenticated()
                 )
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
