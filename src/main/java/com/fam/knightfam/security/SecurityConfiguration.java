@@ -11,16 +11,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.Map;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private String clientId = "1eddhu1oale604stl9e348bq0i";
-    private String cognitoDomain = "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com";
-    private String logoutRedirectUrl = "https://knightfam.com";
+    private final String clientId;
+    private final String cognitoDomain;
+    private final String logoutRedirectUrl;
 
     public SecurityConfiguration(Environment env) {
         this.clientId = "1eddhu1oale604stl9e348bq0i";
@@ -30,20 +30,42 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // instantiate your existing handler with the Cognito domain
         CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain);
 
         http
+                // disable CSRF so GET /logout works
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
-                        .requestMatchers("/api/photos/**", "/vote/**", "/user-page", "/gallery.html", "/voting.html","createvote.html").authenticated()
+                        .requestMatchers(
+                                "/api/photos/**",
+                                "/vote/**",
+                                "/user-page",
+                                "/gallery.html",
+                                "/voting.html",
+                                "/createvote.html"
+                        ).authenticated()
                         .anyRequest().authenticated()
                 )
-                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
+
+                .requestCache(cache -> cache.requestCache(new org.springframework.security.web.savedrequest.NullRequestCache()))
+
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/user-page", true)
                 )
-                .logout(logout -> logout.logoutSuccessHandler(logoutHandler));
+
+                .logout(logout -> logout
+                        // Treat GET /logout as the logout endpoint
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        // invoke your CognitoLogoutHandler
+                        .logoutSuccessHandler(logoutHandler)
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
 
         return http.build();
     }

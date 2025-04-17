@@ -38,28 +38,31 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
                 GetSecretValueRequest.builder().secretId(secretName).build());
 
         try {
-            return new ObjectMapper().readValue(response.secretString(), new TypeReference<>() {});
+            return new ObjectMapper().readValue(response.secretString(), new TypeReference<>() {
+            });
         } catch (IOException e) {
             throw new RuntimeException("Unable to parse secret JSON", e);
         }
     }
 
     @Override
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    protected String determineTargetUrl(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) {
         String host = request.getServerName();
+        String redirectUrl = host.contains("localhost")
+                ? "http://localhost:8080"
+                : "https://knightfam.com";
 
-        String redirectUrl;
-        if (host.contains("localhost")) {
-            redirectUrl = "http://localhost:8080/";
-        } else {
-            redirectUrl = "https://knightfam.com/";
-        }
-
-        return UriComponentsBuilder
+        // build + then encode all reserved chars
+        String logoutUrl = UriComponentsBuilder
                 .fromHttpUrl(domain + "/logout")
                 .queryParam("client_id", clientId)
                 .queryParam("logout_uri", redirectUrl)
                 .build()
+                .encode()
                 .toUriString();
+
+        return logoutUrl;
     }
-}
+
