@@ -24,7 +24,7 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     public CognitoLogoutHandler(String domain) {
         Map<String, String> secrets = fetchSecrets();
-        this.domain = domain;
+        this.domain = "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com";
         this.clientId = secrets.getOrDefault("clientId", "1eddhu1oale604stl9e348bq0i");
     }
 
@@ -65,4 +65,5 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
         return logoutUrl;
     }
+}
 

@@ -45,7 +45,12 @@ public class SecurityConfiguration {
                                 "/user-page",
                                 "/gallery.html",
                                 "/voting.html",
-                                "/createvote.html"
+                                "/createvote.html",
+                                "/calendar.html",
+                                "/create-event.html",
+                                "/api/calendar",
+                                "api/events"
+
                         ).authenticated()
                         .anyRequest().authenticated()
                 )

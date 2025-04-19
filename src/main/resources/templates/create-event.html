@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>New Event</title></head>
+<body>
+<div th:replace="fragments/menu :: menu"></div>
+
+<form th:action="@{/calendar/create}" th:object="${eventDto}" method="post">
+    <div>
+        <label>Title:</label>
+        <input type="text" th:field="*{title}" required/>
+    </div>
+    <div>
+        <label>Date:</label>
+        <input type="date" th:field="*{start}" required/>
+    </div>
+    <button type="submit">Save Event</button>
+</form>
+</body>
+</html>
