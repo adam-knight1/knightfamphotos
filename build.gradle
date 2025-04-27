@@ -37,7 +37,7 @@ dependencies {
 	implementation platform("software.amazon.awssdk:bom:2.25.21")
 	implementation "software.amazon.awssdk:secretsmanager"
 	implementation "software.amazon.awssdk:regions"
-	implementation "io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.5.0"
+	//implementation "io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.5.0"
 
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

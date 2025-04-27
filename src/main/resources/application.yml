@@ -2,21 +2,11 @@ spring:
   application:
     name: knightfam
 
-  # ────────────────────────────────────────────────────────────────
-  # 1) Enable AWS Secrets Manager to load spring.datasource.* props
-  cloud:
-    aws:
-      secretsmanager:
-        enabled: true
-        default-context: Knightfam/DBCredentials  # your secret name
-        region: us-east-2
-
-  # 2) Only the driver remains; URL/user/pass come from Secrets Manager
   datasource:
     driver-class-name: org.postgresql.Driver
-    # url: "jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam"
-    # username: "famknight"
-    # password: "banjo123"
+    url: "jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam"
+    #username: "famknight"
+    #password: "banjo123"
 
   server:
     port: 8080
@@ -34,9 +24,9 @@ spring:
       client:
         registration:
           cognito:
-            client-id: 1eddhu1oale604stl9e348bq0i
-            client-secret: 1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc
-            provider: cognito
+           # client-id: 1eddhu1oale604stl9e348bq0i
+           # client-secret: 1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc
+           # provider: cognito
             scope:
               - openid
               - email
