@@ -228,6 +228,4 @@ public class PhotoService {
             return map;
         }).collect(Collectors.toList());
     }
-
-
 }
