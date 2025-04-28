@@ -1,32 +1,24 @@
 #!/bin/bash
-
 set -e
 
-echo "🚀 Installing AWS CodeDeploy Agent on Amazon Linux 2023..."
-
-# Update package index
+echo "🔧 Updating packages..."
 sudo dnf update -y
 
-# Install Ruby and wget (required for CodeDeploy agent)
+echo "🐳 Installing Docker..."
+sudo dnf install -y docker
+
+echo "🚀 Starting Docker..."
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+
+echo "💎 Installing Ruby & wget for CodeDeploy..."
 sudo dnf install -y ruby wget
-
-# Download and install the CodeDeploy agent installer script
-REGION="us-east-2"  # 🔧 Change this if you're using a different region
-INSTALLER_URL="https://aws-codedeploy-${REGION}.s3.${REGION}.amazonaws.com/latest/install"
-
 cd /home/ec2-user
-wget ${INSTALLER_URL}
+wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
 chmod +x ./install
-
-# Run the installer
 sudo ./install auto
 
-# Start and enable the agent
-sudo systemctl start codedeploy-agent
-sudo systemctl enable codedeploy-agent
-
-# Check status
-echo "✅ CodeDeploy agent status:"
-sudo systemctl status codedeploy-agent --no-pager
-
-echo "🎉 CodeDeploy agent installation complete."
+echo "✅ Bootstrap complete. Now running deploy script…"
+# Call your deploy script (make sure it’s on the instance or pulled from S3/Git)
+bash /home/ec2-user/deploy-knightfam.sh
