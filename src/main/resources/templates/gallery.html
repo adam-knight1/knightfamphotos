@@ -26,7 +26,14 @@
     .card-title { color:var(--primary); font-weight:600; }
     .btn-custom { background:#fff; color:var(--accent); border:2px solid #fff; border-radius:50px; padding:.5rem 1.5rem; font-weight:600; transition:.3s; }
     .btn-custom:hover { background:var(--accent); color:#fff; }
-    .upload-form { background: rgba(255,255,255,0.9); padding:1.5rem; border-radius:10px; margin-bottom:2rem; }
+    /* Smaller, centered upload box */
+    .upload-form {
+      background: rgba(255,255,255,0.9);
+      padding: 1rem;
+      border-radius:10px;
+      margin: 0 auto 2rem;
+      max-width: 500px;
+    }
     .file-label {
       position: relative;
       display: inline-block;
@@ -56,16 +63,15 @@
 <!-- Navbar -->
 <div th:replace="~{fragments/menu :: menu}"></div>
 
-<div class="container mt-5">
+<div class="container mt-4">
   <a th:href="@{/user-page}" class="btn btn-custom mb-3">← Back to Dashboard</a>
 
-  <h2 class="text-center mb-4 gallery-heading">📸 Family Photo Gallery</h2>
+  <h2 class="text-center mb-3 gallery-heading">📸 Family Photo Gallery</h2>
 
   <!-- Upload Form -->
   <div class="upload-form shadow-lg">
-    <h4 class="mb-3" style="color:var(--primary);">Upload a New Photo</h4>
+    <h4 class="mb-2" style="color:var(--primary);">Upload a New Photo</h4>
     <form th:action="@{/api/photos/upload}" method="post" enctype="multipart/form-data">
-      <!-- CSRF token, only if enabled -->
       <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
       <div class="mb-3">
