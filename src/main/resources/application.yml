@@ -1,17 +1,28 @@
 spring:
   application:
     name: knightfam
-
-  servlet:
+    servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
 
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
     username: famknight
     password: banjo123
+
+  server:
+    port: 8080
+    address: 0.0.0.0
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      format_sql: true
 
   security:
     oauth2:
@@ -31,29 +42,20 @@ spring:
             issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
             user-name-attribute: username
 
-  jpa:
-    show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-      format_sql: true
-
-aws:
-  s3:
-    bucket: knightfam-s3
-    region: us-east-2
-
-cognito:
-  domain: "https://us-east-2_4L2Pj9fxk.auth.us-east-2.amazoncognito.com"
-  logout-redirect-url: "https://knightfam.com"
-
-server:
-  port: 8080
-  address: 0.0.0.0
-  forward-headers-strategy: framework
-
 logging:
   level:
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+cognito:
+  domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
+  logout-redirect-url: "https://knightfam.com"
+
+server:
+  forward-headers-strategy: framework
+
+aws:
+  s3:
+    bucket: knightfam-s3
+    region: us-east-2
