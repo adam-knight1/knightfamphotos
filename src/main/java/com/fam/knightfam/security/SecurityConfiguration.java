@@ -30,15 +30,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // instantiate your existing handler with the Cognito domain
         CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain);
 
         http
+                // disable CSRF so GET /logout works
                 .csrf(csrf -> csrf.disable())
 
-                // <-- open actuator health (and optionally info) before any authentication
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
-                        .requestMatchers("/", "/login", "/error", "/oauth2/**").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
                         .requestMatchers(
                                 "/api/photos/**",
                                 "/vote/**",
@@ -50,18 +51,21 @@ public class SecurityConfiguration {
                                 "/create-event.html",
                                 "/api/calendar",
                                 "api/events"
+
                         ).authenticated()
                         .anyRequest().authenticated()
                 )
 
-                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
+                .requestCache(cache -> cache.requestCache(new org.springframework.security.web.savedrequest.NullRequestCache()))
 
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/user-page", true)
                 )
 
                 .logout(logout -> logout
+                        // Treat GET /logout as the logout endpoint
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        // invoke your CognitoLogoutHandler
                         .logoutSuccessHandler(logoutHandler)
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
@@ -71,7 +75,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
