@@ -53,8 +53,8 @@ public class SecurityConfiguration {
                                 "/createvote.html",
                                 "/calendar.html",
                                 "/create-event.html",
-                                "/api/calendar",
-                                "/api/events"
+                                "/api/calendar/**",
+                                "/api/events/**"
                         ).authenticated()
 
                         // Everything else requires auth
