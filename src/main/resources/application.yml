@@ -1,7 +1,8 @@
 spring:
   application:
     name: knightfam
-    servlet:
+
+  servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
@@ -17,10 +18,6 @@ spring:
     url: jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
     username: famknight
     password: banjo123
-
-  server:
-    port: 8080
-    address: 0.0.0.0
 
   jpa:
     show-sql: true
@@ -42,10 +39,10 @@ spring:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        provider:
-          cognito:
-            issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
-            user-name-attribute: username
+      provider:
+        cognito:
+          issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
+          user-name-attribute: username
 
 logging:
   level:
@@ -57,10 +54,12 @@ cognito:
   domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
   logout-redirect-url: "https://knightfam.com"
 
-server:
-  forward-headers-strategy: framework
-
 aws:
   s3:
     bucket: knightfam-s3
     region: us-east-2
+
+server:
+  port: 8080
+  address: 0.0.0.0
+  forward-headers-strategy: framework
