@@ -11,7 +11,7 @@ spring:
     endpoints:
       web:
         exposure:
-          include: health,info      # <— this exposes /actuator/health and /actuator/info
+          include: health,info
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -22,6 +22,7 @@ spring:
   server:
     port: 8080
     address: 0.0.0.0
+    forward-headers-strategy: framework
 
   jpa:
     show-sql: true
@@ -43,10 +44,10 @@ spring:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-      provider:
-        cognito:
-          issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
-          user-name-attribute: username
+        provider:
+          cognito:
+            issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
+            user-name-attribute: username
 
 logging:
   level:
@@ -55,7 +56,7 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 cognito:
-  domain: "https://us-east-24l2pj9fxk.auth.us-east-2.amazoncognito.com"
+  domain: "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com"
   logout-redirect-url: "https://knightfam.com"
 
 aws:

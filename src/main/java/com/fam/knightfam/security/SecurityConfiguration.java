@@ -1,7 +1,6 @@
 package com.fam.knightfam.security;
 
 import com.fam.knightfam.auth.CognitoLogoutHandler;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -13,7 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.Map;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -23,6 +21,7 @@ public class SecurityConfiguration {
     private final String logoutRedirectUrl;
 
     public SecurityConfiguration(Environment env) {
+        // you can also pull these from env if you prefer
         this.clientId = "1eddhu1oale604stl9e348bq0i";
         this.cognitoDomain = "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com";
         this.logoutRedirectUrl = "https://knightfam.com";
@@ -30,16 +29,21 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // instantiate your existing handler with the Cognito domain
         CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain);
 
         http
-                // disable CSRF so GET /logout works
+                // 1) Disable CSRF (so GET /logout works)
                 .csrf(csrf -> csrf.disable())
 
+                // 2) Authorization rules
                 .authorizeHttpRequests(auth -> auth
+                        // Allow actuator endpoints for health checks
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+
+                        // Public pages
                         .requestMatchers("/", "/login", "/error", "/error/**", "/oauth2/**").permitAll()
+
+                        // Your protected API/UI paths
                         .requestMatchers(
                                 "/api/photos/**",
                                 "/vote/**",
@@ -50,22 +54,24 @@ public class SecurityConfiguration {
                                 "/calendar.html",
                                 "/create-event.html",
                                 "/api/calendar",
-                                "api/events"
-
+                                "/api/events"
                         ).authenticated()
+
+                        // Everything else requires auth
                         .anyRequest().authenticated()
                 )
 
-                .requestCache(cache -> cache.requestCache(new org.springframework.security.web.savedrequest.NullRequestCache()))
+                // 3) Don’t trigger the default saved‐request cache
+                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
 
+                // 4) OAuth2 login
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/user-page", true)
                 )
 
+                // 5) Custom GET /logout handling
                 .logout(logout -> logout
-                        // Treat GET /logout as the logout endpoint
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        // invoke your CognitoLogoutHandler
                         .logoutSuccessHandler(logoutHandler)
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
