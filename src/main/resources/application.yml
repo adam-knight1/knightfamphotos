@@ -11,13 +11,17 @@ spring:
     endpoints:
       web:
         exposure:
-          include: health,info
+          include: health,info      # <— this exposes /actuator/health and /actuator/info
 
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
     username: famknight
     password: banjo123
+
+  server:
+    port: 8080
+    address: 0.0.0.0
 
   jpa:
     show-sql: true
@@ -58,8 +62,3 @@ aws:
   s3:
     bucket: knightfam-s3
     region: us-east-2
-
-server:
-  port: 8080
-  address: 0.0.0.0
-  forward-headers-strategy: framework
