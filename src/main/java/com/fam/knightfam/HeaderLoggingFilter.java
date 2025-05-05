@@ -9,7 +9,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-
+//adding this class to figure out why https requests aren't terminating into htto requests
+//at ALB and cognito redirect is returning an error.
 @Component
 public class HeaderLoggingFilter extends OncePerRequestFilter {
 
