@@ -1,10 +1,9 @@
-# ─── top-level server section ────────────────────────────────────────────────────
 server:
   port: 8080
   address: 0.0.0.0
-  forward-headers-strategy: native
+  # trust the ALB’s X-Forwarded-* headers so baseUrl → https://knightfam.com
+  forward-headers-strategy: framework
 
-# ─── now your Spring properties ───────────────────────────────────────────────────
 spring:
   application:
     name: knightfam
@@ -45,18 +44,12 @@ spring:
               - openid
               - email
               - profile
-            # use the *template* key here so Spring picks up the forwarded headers:
+            # ← this *template* will resolve to https://knightfam.com/…
             redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
       provider:
         cognito:
           issuer-uri:         https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk
           user-name-attribute: username
-
-logging:
-  level:
-    org.springframework.security: DEBUG
-    org.hibernate.SQL:          DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 cognito:
   domain:            https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com
@@ -66,3 +59,9 @@ aws:
   s3:
     bucket: knightfam-s3
     region: us-east-2
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.hibernate.SQL:          DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

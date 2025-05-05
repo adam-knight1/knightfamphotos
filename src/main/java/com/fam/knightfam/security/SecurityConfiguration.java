@@ -14,7 +14,6 @@ import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -24,6 +23,7 @@ public class SecurityConfiguration {
 
     @Bean
     public ForwardedHeaderFilter forwardedHeaderFilter() {
+        // ensures Spring sees X-Forwarded-Proto and builds baseUrl=https://knightfam.com
         return new ForwardedHeaderFilter();
     }
 
@@ -32,7 +32,10 @@ public class SecurityConfiguration {
         CognitoLogoutHandler logoutHandler = new CognitoLogoutHandler(cognitoDomain);
 
         http
+                // disable CSRF so GET /logout works
                 .csrf(csrf -> csrf.disable())
+
+                // authorization rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/", "/login", "/error", "/oauth2/**").permitAll()
@@ -50,10 +53,16 @@ public class SecurityConfiguration {
                         ).authenticated()
                         .anyRequest().authenticated()
                 )
+
+                // don’t cache the original saved request (avoids login loop)
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))
+
+                // OAuth2 login → Cognito
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/user-page", true)
                 )
+
+                // GET /logout → hit Cognito logout endpoint
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessHandler(logoutHandler)
@@ -64,11 +73,6 @@ public class SecurityConfiguration {
                 );
 
         return http.build();
-    }
-
-    @Bean
-    public CognitoLogoutHandler logoutHandler() {
-        return new CognitoLogoutHandler(cognitoDomain);
     }
 
     @Bean
