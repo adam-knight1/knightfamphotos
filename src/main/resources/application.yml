@@ -1,3 +1,10 @@
+# ─── top-level server section ────────────────────────────────────────────────────
+server:
+  port: 8080
+  address: 0.0.0.0
+  forward-headers-strategy: native
+
+# ─── now your Spring properties ───────────────────────────────────────────────────
 spring:
   application:
     name: knightfam
@@ -15,14 +22,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://database-1-knightfam-new.c7y0y42uc2st.us-east-2.rds.amazonaws.com:5432/knightfam
+    url: jdbc:postgresql://…/knightfam
     username: famknight
     password: banjo123
-
-  server:
-    port: 8080
-    address: 0.0.0.0
-    forward-headers-strategy: framework
 
   jpa:
     show-sql: true
@@ -36,28 +38,29 @@ spring:
       client:
         registration:
           cognito:
-            client-id: "1eddhu1oale604stl9e348bq0i"
-            client-secret: "1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc"
-            provider: cognito
+            client-id:     1eddhu1oale604stl9e348bq0i
+            client-secret: 1jv782dl6h69u2qaq4phu9jvt3sniottlp7otj9qh9skavi472rc
+            provider:      cognito
             scope:
               - openid
               - email
               - profile
-            redirect-uri: "https://knightfam.com/login/oauth2/code/cognito"
-        provider:
-          cognito:
-            issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
-            user-name-attribute: username
+            # use the *template* key here so Spring picks up the forwarded headers:
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+      provider:
+        cognito:
+          issuer-uri:         https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk
+          user-name-attribute: username
 
 logging:
   level:
     org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL:          DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 cognito:
-  domain: "https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com"
-  logout-redirect-url: "https://knightfam.com"
+  domain:            https://us-east-2_4l2pj9fxk.auth.us-east-2.amazoncognito.com
+  logout-redirect-url: https://knightfam.com
 
 aws:
   s3:
