@@ -1,18 +1,18 @@
 version: 0.0
 os: linux
+
 files:
   - source: /
     destination: /home/ec2-user/knightfam
 
 hooks:
   BeforeInstall:
-    - location: scripts/stop_container.sh
+    - location: scripts/stop-container.sh  # 🛑 Make sure name matches actual file!
       timeout: 60
       runas: ec2-user
 
   AfterInstall:
-    - location: scripts/start_container.sh
+    - location: scripts/run-container.sh  # ✅ Consistent with Script 3
       timeout: 60
       runas: ec2-user
-
 

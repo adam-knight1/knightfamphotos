@@ -15,9 +15,6 @@ public class KnightfamApplication {
 
 	public static void main(String[] args) {
 
-
-
-
 		// Retrieve secrets from AWS Secrets Manager
 		/*Map<String, String> secrets = AwsSecretsConfig();
 
