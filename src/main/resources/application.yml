@@ -22,7 +22,7 @@ spring:
   server:
     port: 8080
     address: 0.0.0.0
-    forward-headers-strategy: framework
+    forward-headers-strategy: native
 
   jpa:
     show-sql: true
@@ -43,7 +43,7 @@ spring:
               - openid
               - email
               - profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           cognito:
             issuer-uri: "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_4L2Pj9fXk"
