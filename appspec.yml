@@ -12,7 +12,7 @@ hooks:
       runas: ec2-user
 
   AfterInstall:
-    - location: scripts/run-container.sh  # ✅ Consistent with Script 3
+    - location: scripts/start-container.sh  # ✅ Consistent with Script 3
       timeout: 60
       runas: ec2-user
 
