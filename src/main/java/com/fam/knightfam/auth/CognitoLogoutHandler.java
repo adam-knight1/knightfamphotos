@@ -45,6 +45,7 @@ public class CognitoLogoutHandler extends SimpleUrlLogoutSuccessHandler {
         }
     }
 
+
     @Override
     protected String determineTargetUrl(HttpServletRequest request,
                                         HttpServletResponse response,
