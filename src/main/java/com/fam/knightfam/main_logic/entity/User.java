@@ -7,7 +7,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue
     @Column(name = "user_id", updatable = false, nullable = false)
