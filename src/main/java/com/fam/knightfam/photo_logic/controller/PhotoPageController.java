@@ -27,8 +27,6 @@ public class PhotoPageController {
         return "gallery";
     }
 
-
-
     @GetMapping("/photo")
     public String photoUploadForm() {
         return "photo";
