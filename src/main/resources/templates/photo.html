@@ -50,7 +50,7 @@
                     ></textarea>
                 </div>
 
-                <!-- big tappable file-picker -->
+                <!-- Big, tappable file-picker (removing `capture`) -->
                 <label
                         class="btn btn-outline-secondary w-100 mb-3 position-relative"
                         style="overflow:hidden"
@@ -61,7 +61,6 @@
                             type="file"
                             name="file"
                             accept="image/*"
-                            capture="environment"
                             required
                             style="
                 position:absolute;
@@ -70,6 +69,7 @@
                 opacity:0;
                 cursor:pointer;
               "
+                            onchange="this.form.submit()"
                     />
                 </label>
 
@@ -103,29 +103,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document
-      .getElementById('fileInput')
-      .addEventListener('change', async function () {
-        const form = document.getElementById('uploadForm');
-        const formData = new FormData(form);
-        try {
-          const res = await fetch(form.action, {
-            method: 'POST',
-            body: formData
-          });
-          if (res.ok) {
-            // on success, go to gallery
-            window.location.href = /* adjust if your gallery path */ '/gallery';
-          } else {
-            // show server error
-            const text = await res.text();
-            alert('Upload failed: ' + text);
-          }
-        } catch (err) {
-          alert('Upload error: ' + err);
-        }
-      });
-  </script>
 </body>
 </html>

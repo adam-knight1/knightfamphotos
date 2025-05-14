@@ -36,6 +36,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+//This photoservice class initially contained most of the logic for the gallery, but I abstracted some of the UI stuff/
+//into other controllers.  It still serves the main purpose of hosting pics in S3 buckets, and storing metadata in RDS,
+//linked to each user.  It also contains an SQS element when a photo is uploaded, which I'll be expanding at some point.
+//profile pictures as well, get all photos, the GOOD STUFF
 @Service
 public class PhotoService {
     private final S3Client s3Client;
@@ -108,12 +112,13 @@ public class PhotoService {
 
         photoRepository.save(photo);
 
-        // Publish an event to SQS for additional processing (e.g., thumbnail generation)
+        // Publishing an event to SQS for additional processing  (thumbnail generation?)
         publishPhotoUploadEvent(s3Key, photoUrl, email);
 
         return photoUrl;
     }
-
+        //still working on getting this to work, the TL template will pull it if it exists but I haven't put
+            //in an unpload section you
     public String uploadProfilePicture(MultipartFile file, String email) throws IOException {
         log.info("Starting uploadProfilePicture method");
         String s3Key = generateUniqueKey(file.getOriginalFilename(), email);
@@ -122,7 +127,6 @@ public class PhotoService {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(s3Key)
-                //.acl("public-read") not supported by S3 as per ACL defaults
                 .build();
 
         try {
@@ -161,7 +165,7 @@ public class PhotoService {
 
     private void publishPhotoUploadEvent(String s3Key, String photoUrl, String email) {
         try {
-            // Create a simple event map; alternatively, create a dedicated POJO (e.g., PhotoUploadEvent)
+            // Create a simple event map
             Map<String, String> event = new HashMap<>();
             event.put("s3Key", s3Key);
             event.put("photoUrl", photoUrl);
@@ -179,7 +183,7 @@ public class PhotoService {
             log.info("Published photo upload event to SQS for s3Key: {}", s3Key);
         } catch (Exception e) {
             log.error("Failed to publish photo upload event to SQS", e);
-            // Depending on your design, you may want to retry or handle this failure differently
+            //todo -maybe handle this differently
         }
     }
 
@@ -218,16 +222,16 @@ public class PhotoService {
         return presignedRequest.url().toString();
     }
 
+
+    //method for S3 requirements using presigned URLS.
     public List<Map<String, Object>> getAllPhotosWithPresignedUrls() {
         return photoRepository.findAll().stream().map(photo -> {
             Map<String, Object> map = new HashMap<>();
             map.put("title", photo.getTitle());
             map.put("description", photo.getDescription());
             map.put("uploadTime", photo.getUploadTime());
-            map.put("url", generatePresignedUrl(photo.getS3ObjectKey())); // Uses your presigned URL method
+            map.put("url", generatePresignedUrl(photo.getS3ObjectKey())); // Usespresigned URL method
             return map;
         }).collect(Collectors.toList());
     }
-
-
 }
