@@ -7,12 +7,12 @@ files:
 
 hooks:
   BeforeInstall:
-    - location: scripts/stop_container.sh  # 🛑 Make sure name matches actual file!
+    - location: scripts/stop_container.sh
       timeout: 60
       runas: ec2-user
 
   AfterInstall:
-    - location: scripts/start_container.sh  # ✅ Consistent with Script 3
+    - location: scripts/start_container.sh
       timeout: 60
       runas: ec2-user
 
